@@ -24,7 +24,7 @@ router.get("/recipe/:id/update", recipe_controller.recipe_update_get)
 router.post("/recipe/:id/update", recipe_controller.recipe_update_post)
 
 // Get request for one book.
-router.get("/book/:id", recipe_controller.recipe_detail);
+router.get("/recipe/:id", recipe_controller.recipe_detail);
 
 // Get Request for list of all recipes
 router.get("/recipes", recipe_controller.recipe_list)

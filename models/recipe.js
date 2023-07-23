@@ -42,3 +42,5 @@ const RecipeSchema = new Schema({
 		type: Array
 	}
 })
+
+module.exports = mongoose.model("Recipe", RecipeSchema)
