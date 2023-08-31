@@ -35,6 +35,8 @@ router.get("/recipes", recipe_controller.recipe_list)
 // Test Router for parsing recipe
 router.get('/recipes/parse/:url/:recipe/', recipe_controller.recipe_test_parse)
 
+router.get(`/recipes/parse/cupcakesandkalechips/:recipe/`, recipe_controller.cupcakesandkale_parse)
+
 // test router for simple url
 router.get('/url/:url', recipe_controller.url)
 

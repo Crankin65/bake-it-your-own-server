@@ -141,22 +141,25 @@ exports.recipe_test_parse = asyncHandler(async (req,res, next) => {
 
 	function createURL() {
 		if (section) {
-			const urlAddress = `${url}.com/${recipe}/${section}`
+			const urlAddress = `https://${url}.com/${recipe}/${section}`
 			console.log(`the url that will be sent is ${urlAddress} `)
 			return urlAddress
 		} else {
-			const urlAddress = `${url}.com/${recipe}`
+			const urlAddress = `https://${url}.com/${recipe}`
 			console.log(`the url that will be sent is ${urlAddress} `)
 			return urlAddress
 		}
 	}
+	//
+	// try {
+	// 	const html = await getHtmlTestScrape(createURL())
+	// 	// console.log(html.data)
+	// } catch (error) {
+	// 	// console.error(error)
+	// }
 
-	try {
 		const html = await getHtmlTestScrape(createURL())
 		console.log(html.data)
-	} catch (error) {
-		console.error(error)
-	}
 
 	let recipeObject = returnCookieAndKateObjectTestScrape(await html)
 
@@ -166,6 +169,34 @@ exports.recipe_test_parse = asyncHandler(async (req,res, next) => {
 	})
 })
 
+exports.cupcakesandkale_parse = asyncHandler(async(req, res) => {
+	const url = req.params.url
+	const recipe = req.params.recipe
+	const section = req.params.section
+
+	function createURL() {
+		if (section) {
+			const urlAddress = `https://${url}.com/${recipe}/${section}`
+			console.log(`the url that will be sent is ${urlAddress} `)
+			return urlAddress
+		} else {
+			const urlAddress = `https://${url}.com/${recipe}`
+			console.log(`the url that will be sent is ${urlAddress} `)
+			return urlAddress
+		}
+	}
+
+	const html = await getHtmlTestScrape(createURL())
+	console.log(html.data)
+
+	let recipeObject = returnCookieAndKateObjectTestScrape(await html)
+
+
+	await res.json({
+		recipeObject: recipeObject
+	})
+
+})
 exports.url = asyncHandler(async(req, res, next) => {
 	res.status(200)
 
