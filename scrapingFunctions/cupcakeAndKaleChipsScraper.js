@@ -1,12 +1,12 @@
 const fs = require('fs');
 const cheerio = require('cheerio')
 
-export function demoHtml (){
+function demoHtml (){
 	const data =  fs.readFileSync('../../TestPageHTML/ChickenFriedRiceCupcakesAndKaleChips.html')
 	return data
 }
 
-export function returnCupcakeAndKaleChipsDetails(data){
+  function returnCupcakeAndKaleChipsDetails(data){
 	const $ = cheerio.load(data);
 
 
@@ -19,11 +19,11 @@ export function returnCupcakeAndKaleChipsDetails(data){
 		cuisine: $('.wprm-recipe-cuisine.wprm-block-text-normal').text()
 	}
 
-	console.log(overviewObject)
+	// console.log(overviewObject)
 	return overviewObject
 }
 
-export function returnCupcakeAndKaleChipsIngredients(data){
+  function returnCupcakeAndKaleChipsIngredients(data){
 	const $ = cheerio.load(data);
 	let ingredientDiv = $('.wprm-recipe-ingredient-group').find('ul').children('li')
 
@@ -33,11 +33,11 @@ export function returnCupcakeAndKaleChipsIngredients(data){
 		ingredientsMappedArray.push($(e).text())
 	})
 
-	console.log(`ingredients are ${ingredientsMappedArray}`)
+	// console.log(`ingredients are ${ingredientsMappedArray}`)
 	return ingredientsMappedArray
 }
 
-export function returnCupcakeAndKaleChipsInstructions(data) {
+  function returnCupcakeAndKaleChipsInstructions(data) {
 	const $ = cheerio.load(data);
 	let instructionDiv = $('.wprm-recipe-instruction-group').find('ul').children('li')
 
@@ -47,12 +47,12 @@ export function returnCupcakeAndKaleChipsInstructions(data) {
 		instructionMappedArray.push($(e).text())
 	})
 
-	console.log(`${instructionMappedArray}`)
+	// console.log(`${instructionMappedArray}`)
 	return instructionMappedArray
 
 }
 
-export function returnCupcakeAndKaleChipsTipsForSuccess(data) {
+  function returnCupcakeAndKaleChipsTipsForSuccess(data) {
 	const $ = cheerio.load(data);
 
 	let tipsForSuccess = $('[id=h-tips-for-success]').nextUntil('div')
@@ -69,22 +69,32 @@ export function returnCupcakeAndKaleChipsTipsForSuccess(data) {
 			tipsMappedArray.push($(e).text())
 		})
 
-		console.log(tipsMappedArray)
+		// console.log(tipsMappedArray)
 		return tipsMappedArray
 	}
 
 }
 
-// returnDetails(demoHtml());
-// returnIngredients(demoHtml())
-// returnInstructions(demoHtml())
-// returnTipsForSuccess(demoHtml())
+  function returnCupcakeAndKaleChipsObject(url){
+	let cupcakeAndKaleChipsObject = {
+		details: returnCupcakeAndKaleChipsDetails(url),
+		ingredients: returnCupcakeAndKaleChipsIngredients(url),
+		instructions: returnCupcakeAndKaleChipsInstructions(url),
+		tips: returnCupcakeAndKaleChipsInstructions(url)
+	}
 
-exports.module = {
+
+	return cupcakeAndKaleChipsObject
+}
+
+returnCupcakeAndKaleChipsObject('https://cupcakesandkalechips.com/gluten-free-air-fryer-chicken-nuggets/')
+
+module.exports = {
 	demoHtml: demoHtml,
 	returnCupcakeAndKaleChipsDetails: returnCupcakeAndKaleChipsDetails,
 	returnCupcakeAndKaleChipsIngredients: returnCupcakeAndKaleChipsIngredients,
 	returnCupcakeAndKaleChipsInstructions: returnCupcakeAndKaleChipsInstructions,
-	returnCupcakeAndKaleChipsTipsForSuccess: returnCupcakeAndKaleChipsTipsForSuccess
+	returnCupcakeAndKaleChipsTipsForSuccess: returnCupcakeAndKaleChipsTipsForSuccess,
+	returnCupcakeAndKaleChipsObject: returnCupcakeAndKaleChipsObject
 
 };

@@ -3,14 +3,41 @@ const cheerio = require('cheerio')
 const axios = require('axios')
 
 function demoHtml (){
-	const data =  fs.readFileSync('../../TestPageHTML/CookieAndKateChanaMasala.html')
+	const data =  fs.readFileSync('../scrapingFunctions/demoHTML/cookiesandkatechanamasala.html')
 	return data
 }
 
-export async function returnCookieAndKateDetails(url){
+async function getHtml(url){
+	const html = await axios.get(url)
+	// console.log('-----axios-----')
+	// console.log(html.body)
+	return html
+}
+
+function returnCookieAndKateObject(url){
 	try {
-		const html = await axios.get(url)
-		const $ = cheerio.load(html.data);
+		const html =  getHtml(url)
+		// const html = demoHtml()
+
+		let cookieAndKateObject = {
+			overview: returnCookieAndKateDetails(html),
+			ingredients: returnCookieAndKateIngredients(html),
+			instructions: returnCookieAndKateInstructions(html),
+			notes: returnCookieAndKateNotes(html)
+		}
+
+		console.log('-----')
+		console.log(html)
+		return cookieAndKateObject
+	} catch (err) {
+		console.error(err)
+	}
+}
+
+function returnCookieAndKateDetails(html){
+	try {
+		// const html = await axios.get(url)
+		const $ = cheerio.load(html);
 
 		// let overviewObject: Promise<overviewObjectTemplate<{T{string}>>
 		// 'Promise<overviewObjectTemplate | object>'
@@ -27,7 +54,8 @@ export async function returnCookieAndKateDetails(url){
 
 		}
 
-		console.log(overviewObject)
+		// console.log('--------')
+		// console.log(overviewObject)
 		return overviewObject
 
 	} catch(error) {
@@ -37,7 +65,7 @@ export async function returnCookieAndKateDetails(url){
 
 }
 
-export function returnCookieAndKateIngredients(data){
+ function returnCookieAndKateIngredients(data){
 	const $ = cheerio.load(data);
 	let ingredientDiv = $('.tasty-recipe-ingredients').find('ul').children('li')
 
@@ -51,7 +79,7 @@ export function returnCookieAndKateIngredients(data){
 	return ingredientsMappedArray
 }
 
-export function returnCookieAndKateInstructions(data) {
+function returnCookieAndKateInstructions(data) {
 	const $ = cheerio.load(data);
 	let instructionDiv = $('.tasty-recipe-instructions').find('ol').children('li')
 
@@ -66,7 +94,7 @@ export function returnCookieAndKateInstructions(data) {
 
 }
 
-export function returnCookieAndKateNotes(data) {
+ function returnCookieAndKateNotes(data) {
 	const $ = cheerio.load(data);
 	let notesDiv = $('.tasty-recipes-notes').children('p')
 
@@ -76,7 +104,7 @@ export function returnCookieAndKateNotes(data) {
 		notesMappedArray.push($(e).text())
 	})
 
-	console.log(`${notesMappedArray[1]}`)
+	// console.log(`${notesMappedArray[1]}`)
 	return notesMappedArray
 
 }
@@ -86,9 +114,10 @@ export function returnCookieAndKateNotes(data) {
 // returnInstructions(demoHtml())
 // returnNotes(demoHtml())
 
+// returnCookieAndKateObject('https://cookieandkate.com/christmas-enchiladas-recipe/')
+// getHtml('https://cookieandkate.com/christmas-enchiladas-recipe/')
+
 module.exports = {
-	returnCookieAndKateDetails: returnCookieAndKateDetails,
-	returnCookieAndKateIngredients: returnCookieAndKateIngredients,
-	returnCookieAndKateInstructions: returnCookieAndKateInstructions,
-	returnCookieAndKateNotes: returnCookieAndKateNotes
+	returnCookieAndKateObject: returnCookieAndKateObject,
+	getHtml: getHtml
 };

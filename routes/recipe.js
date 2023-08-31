@@ -5,6 +5,9 @@ const recipe_controller = require('../controllers/recipeController')
 
 // Recipe Routes
 
+// Get request for creating a recipe from url
+router.get('/recipe/create/:url', recipe_controller.recipe_create_url_post)
+
 // Get request for creating a recipe
 router.get("/recipe/create", recipe_controller.recipe_create_get)
 
@@ -29,8 +32,19 @@ router.get("/recipe/:id", recipe_controller.recipe_detail);
 // Get Request for list of all recipes
 router.get("/recipes", recipe_controller.recipe_list)
 
+// Test Router for parsing recipe
+router.get('/recipes/parse/:url/:recipe/', recipe_controller.recipe_test_parse)
+
+// test router for simple url
+router.get('/url/:url', recipe_controller.url)
+
 router.get('/', function (req, res) {
 	res.redirect('/recipes')
 })
+
+// Test parse local page
+router.get('/recipes/parse/test', recipe_controller.local_html_parse)
+
+
 
 module.exports = router

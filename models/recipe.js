@@ -40,6 +40,9 @@ const RecipeSchema = new Schema({
 	},
 	tips: {
 		type: Array
+	},
+	url: {
+		type: String
 	}
 })
 
