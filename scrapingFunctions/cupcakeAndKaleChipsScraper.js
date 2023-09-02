@@ -1,16 +1,11 @@
-const fs = require('fs');
 const cheerio = require('cheerio')
-
-function demoHtml (){
-	const data =  fs.readFileSync('../../TestPageHTML/ChickenFriedRiceCupcakesAndKaleChips.html')
-	return data
-}
 
   function returnCupcakeAndKaleChipsDetails(data){
 	const $ = cheerio.load(data);
 
 
 	let overviewObject = {
+		title: $('.wprm-recipe-name').text(),
 		author: $('.wprm-recipe-details.wprm-recipe-author').text(),
 		prepTime: $('.wprm-recipe-prep-time-container').text(),
 		cookTime: $('.wprm-recipe-cook-time-container').text(),
@@ -87,14 +82,8 @@ function demoHtml (){
 	return cupcakeAndKaleChipsObject
 }
 
-returnCupcakeAndKaleChipsObject('https://cupcakesandkalechips.com/gluten-free-air-fryer-chicken-nuggets/')
+// returnCupcakeAndKaleChipsObject('https://cupcakesandkalechips.com/gluten-free-air-fryer-chicken-nuggets/')
 
 module.exports = {
-	demoHtml: demoHtml,
-	returnCupcakeAndKaleChipsDetails: returnCupcakeAndKaleChipsDetails,
-	returnCupcakeAndKaleChipsIngredients: returnCupcakeAndKaleChipsIngredients,
-	returnCupcakeAndKaleChipsInstructions: returnCupcakeAndKaleChipsInstructions,
-	returnCupcakeAndKaleChipsTipsForSuccess: returnCupcakeAndKaleChipsTipsForSuccess,
 	returnCupcakeAndKaleChipsObject: returnCupcakeAndKaleChipsObject
-
 };

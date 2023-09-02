@@ -1,20 +1,10 @@
 const Recipe = require('../models/recipe')
 const asyncHandler = require('express-async-handler');
 const {returnCupcakeAndKaleChipsObject} = require('../scrapingFunctions/cupcakeAndKaleChipsScraper')
-const {returnCookieAndKateObject, getHtml} = require('../scrapingFunctions/cookieAndKateScraper')
-const {getHtmlTestScrape, returnCookieAndKateObjectTestScrape} = require('../scrapingFunctions/testScrape(Cookieandkate)')
-const {combo} = require('../scrapingFunctions/testAxios')
+const {returnCookieAndKateObject} = require('../scrapingFunctions/cookieAndKateScraper')
+const {fetchHtml} = require('../scrapingFunctions/fetchHtml')
 
-//Display list of all Recipes
 
-exports.recipe_list = asyncHandler(async (req, res, next) => {
-
-	console.log("Test Page")
-	await res.json({
-		title: "title",
-		body: "body"
-	})
-})
 //
 exports.recipe_list_mongo = asyncHandler( async (req, res, next) => {
 	// res.send("Not Implemented: Recipe List");
@@ -78,139 +68,41 @@ exports.recipe_create_url_post = asyncHandler( async (req, res, next) => {
 
 })
 
-//Display detail page for specific Author.
-exports.recipe_detail = asyncHandler(async (req, res, next) => {
-	res.send(`Not Implemented: Recipe Detail: ${req.params.id}`);
-});
-
-// Display Recipe create form on Get.
-exports.recipe_create_get = asyncHandler(async (req, res, next) => {
-	res.send("Not Implemented: Recipe create Get");
-});
-
-// Handle Recipe create on POST
-exports.recipe_create_post = asyncHandler(async (req, res, next) => {
-	// res.send("Not Implemented: Recipe create Post");
-
-	const data = new Recipe( {
-		overview: {
-			author: req
-		}
-	})
-})
-
-
-// Display Recipe delete form on Get.
-exports.recipe_delete_get = asyncHandler(async (req, res, next) => {
-	res.send("Not Implemented: Recipe delete GET")
-});
-
-// Handle Author delete on POST.
-exports.recipe_delete_post = asyncHandler(async (req, res, next) => {
-	res.send("NOT IMPLEMENTED: Recipe delete POST");
-});
-
-// Display Author update form on GET.
-exports.recipe_update_get = asyncHandler(async (req, res, next) => {
-	res.send("NOT IMPLEMENTED: Recipe update GET");
-});
-
-// Handle Author update on POST.
-exports.recipe_update_post = asyncHandler(async (req, res, next) => {
-	res.send("NOT IMPLEMENTED: Recipe update POST");
-});
-
-exports.recipe_test_parse = asyncHandler(async (req,res, next) => {
-	const url = req.params.url
+exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 	const recipe = req.params.recipe
-	const section = req.params.section
 
-	// if (url.includes("cupcakesandkalechips")){
-	// 	let typeOfSite = "cupcakesandkalechips"
-	// 	console.log(`type of site is ${typeOfSite}`)
-	// } else if (url.includes("cookieandkate")){
-	// 	let typeOfSite = "cookieandkate"
-	// 	console.log(`type of site is ${typeOfSite}`)
-	// }
-	//
-	// if (typeOfSite === "cupcakesandkalechips"){
-	// 	const urlAddress =`${url}/${recipe}/${section}`
-	// } else if (typeOfSite === "cookieandkate"){
-	// 	const urlAddress =`${url}/${recipe}`
-	// }
-
-	function createURL() {
-		if (section) {
-			const urlAddress = `https://${url}.com/${recipe}/${section}`
-			console.log(`the url that will be sent is ${urlAddress} `)
-			return urlAddress
-		} else {
-			const urlAddress = `https://${url}.com/${recipe}`
-			console.log(`the url that will be sent is ${urlAddress} `)
-			return urlAddress
-		}
-	}
-	//
-	// try {
-	// 	const html = await getHtmlTestScrape(createURL())
-	// 	// console.log(html.data)
-	// } catch (error) {
-	// 	// console.error(error)
-	// }
-
-		const html = await getHtmlTestScrape(createURL())
-		console.log(html.data)
-
-	let recipeObject = returnCookieAndKateObjectTestScrape(await html)
-
-
-	await res.json({
-		recipeObject: recipeObject
-	})
-})
-
-exports.cupcakesandkale_parse = asyncHandler(async(req, res) => {
-	const url = req.params.url
-	const recipe = req.params.recipe
-	const section = req.params.section
-
-	function createURL() {
-		if (section) {
-			const urlAddress = `https://${url}.com/${recipe}/${section}`
-			console.log(`the url that will be sent is ${urlAddress} `)
-			return urlAddress
-		} else {
-			const urlAddress = `https://${url}.com/${recipe}`
-			console.log(`the url that will be sent is ${urlAddress} `)
-			return urlAddress
-		}
+	function createCookieAndKateURL() {
+		const urlAddress = `https://cookieandkate.com/${recipe}`
+		console.log(`the url that will be sent is ${urlAddress} `)
+		return urlAddress
 	}
 
-	const html = await getHtmlTestScrape(createURL())
+	const html = await fetchHtml(createCookieAndKateURL())
 	console.log(html.data)
 
-	let recipeObject = returnCookieAndKateObjectTestScrape(await html)
-
+	let recipeObject = returnCookieAndKateObject(await html)
 
 	await res.json({
 		recipeObject: recipeObject
 	})
-
 })
-exports.url = asyncHandler(async(req, res, next) => {
-	res.status(200)
 
-	const url = req.params.url
-	try {
-		const response = await getHtmlTestScrape("https://www.playravine.com/")
-		// console.log(response.data)
-	} catch (error) {
-		console.error(error)
+
+exports.cupcakesAndKaleChipsParse = asyncHandler(async(req, res) => {
+	const recipe = req.params.recipe
+
+	function createCupcakesAndKaleChipsURL() {
+		const urlAddress = `https://cupcakesandkalechips.com/${recipe}`
+		console.log(`the url that will be sent is ${urlAddress} `)
+		return urlAddress
 	}
 
+	const html = await fetchHtml(createCupcakesAndKaleChipsURL())
+
+	let recipeObject = returnCupcakeAndKaleChipsObject(await html)
+
 	await res.json({
-		url: url,
-		html: response.data
+		recipeObject: recipeObject
 	})
 })
 
