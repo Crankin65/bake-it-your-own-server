@@ -3,6 +3,7 @@ const cheerio = require('cheerio')
   function returnCupcakeAndKaleChipsDetails(data){
 	const $ = cheerio.load(data);
 
+	let imageUrlLink = $(`.wp-block-image img`).attr('data-lazy-srcset').split(',')[0].split(' ')[0]
 
 	let overviewObject = {
 		title: $('.wprm-recipe-name').text(),
@@ -12,7 +13,7 @@ const cheerio = require('cheerio')
 		totalTime:$('.wprm-recipe-total-time-container').text(),
 		servingNumber: $('.wprm-recipe-servings.wprm-recipe-details').text(),
 		cuisine: $('.wprm-recipe-cuisine.wprm-block-text-normal').text(),
-		// imageUrl: $('.wp-block-image .aligncenter .dpsp-pin-it-wrapper img src').text()
+		imageUrl: imageUrlLink
 	}
 
 	// console.log(overviewObject)
@@ -73,7 +74,7 @@ const cheerio = require('cheerio')
 
   function returnCupcakeAndKaleChipsObject(url){
 	let cupcakeAndKaleChipsObject = {
-		details: returnCupcakeAndKaleChipsDetails(url),
+		overview: returnCupcakeAndKaleChipsDetails(url),
 		ingredients: returnCupcakeAndKaleChipsIngredients(url),
 		instructions: returnCupcakeAndKaleChipsInstructions(url),
 		tips: returnCupcakeAndKaleChipsInstructions(url)
