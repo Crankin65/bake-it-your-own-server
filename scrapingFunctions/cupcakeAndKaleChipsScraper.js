@@ -11,7 +11,8 @@ const cheerio = require('cheerio')
 		cookTime: $('.wprm-recipe-cook-time-container').text(),
 		totalTime:$('.wprm-recipe-total-time-container').text(),
 		servingNumber: $('.wprm-recipe-servings.wprm-recipe-details').text(),
-		cuisine: $('.wprm-recipe-cuisine.wprm-block-text-normal').text()
+		cuisine: $('.wprm-recipe-cuisine.wprm-block-text-normal').text(),
+		// imageUrl: $('.wp-block-image .aligncenter .dpsp-pin-it-wrapper img src').text()
 	}
 
 	// console.log(overviewObject)

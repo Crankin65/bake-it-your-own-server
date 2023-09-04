@@ -3,6 +3,9 @@ const cheerio = require('cheerio')
 function returnCookieAndKateDetails(html) {
 	const $ = cheerio.load(html);
 
+	let imageUrlVersions = $('.entry-content p:eq(1) img ').attr('data-lazy-srcset')
+	let urlArray = imageUrlVersions.split(',')
+
 	let overviewObject = {
 		title: $('.tasty-recipes-display h2').text(),
 		author: $('.tasty-recipes-author-name').text(),
@@ -11,7 +14,8 @@ function returnCookieAndKateDetails(html) {
 		totalTime: $('.tasty-recipes-total-time').text(),
 		servingNumber: $('.tasty-recipes-yield').text(),
 		cuisine: $('.tasty-recipes-cuisine').text(),
-		diet: $('.tasty-recipes-diet').text()
+		diet: $('.tasty-recipes-diet').text(),
+		imageUrl: urlArray[0].split(' ')[0]
 
 	}
 	return overviewObject
