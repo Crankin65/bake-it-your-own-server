@@ -60,9 +60,27 @@ function returnCookieAndKateNotes(html) {
 	return notesMappedArray
 }
 
+function returnCookieAndKateURL(html) {
+	const $ = cheerio.load(html);
+	let printURL = $('.tasty-recipes-button-wrap .button').attr('href');
+	let url = printURL.split('/')
+	url.pop();
+	url.pop();
+	url.pop();
+	let urlText = url.join('/')
+
+
+	// let urlObject = {
+	// 	urlText: url.text()
+	// }
+
+	return urlText;
+}
+
 function returnCookieAndKateObject(html) {
 
 	let cookieAndKateObject = {
+		url: returnCookieAndKateURL(html),
 		overview: returnCookieAndKateDetails(html),
 		ingredients: returnCookieAndKateIngredients(html),
 		instructions: returnCookieAndKateInstructions(html),

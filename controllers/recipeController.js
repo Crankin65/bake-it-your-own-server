@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 const {returnCupcakeAndKaleChipsObject} = require('../scrapingFunctions/cupcakeAndKaleChipsScraper')
 const {returnCookieAndKateObject} = require('../scrapingFunctions/cookieAndKateScraper')
 const {fetchHtml} = require('../scrapingFunctions/fetchHtml')
+const {insertDocument} = require ('../db/insertDocument')
 
 
 //
@@ -78,9 +79,10 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 	}
 
 	const html = await fetchHtml(createCookieAndKateURL())
-	console.log(html.data)
 
 	let recipeObject = returnCookieAndKateObject(await html)
+
+	await insertDocument(recipeObject)
 
 	await res.json({
 		recipeObject: recipeObject
