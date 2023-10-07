@@ -3,8 +3,7 @@ const asyncHandler = require('express-async-handler');
 const {returnCupcakeAndKaleChipsObject} = require('../scrapingFunctions/cupcakeAndKaleChipsScraper')
 const {returnCookieAndKateObject} = require('../scrapingFunctions/cookieAndKateScraper')
 const {fetchHtml} = require('../scrapingFunctions/fetchHtml')
-const {insertDocument} = require ('../db/insertDocument')
-const {findDocument} = require('../db/findDocument')
+const {insertDocument, findDocument, updateDatabaseIfNotFound } = require ('../db/conn')
 
 
 //
@@ -78,6 +77,9 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 		console.log(`the url that will be sent is ${urlAddress} `)
 		return urlAddress
 	}
+
+
+
 
 	if(findDocument(createCookieAndKateURL())) {
 		let recipeObject = findDocument(createCookieAndKateURL())
