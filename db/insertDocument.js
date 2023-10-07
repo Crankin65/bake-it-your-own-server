@@ -5,19 +5,14 @@ const {MongoClient} = require('mongodb');
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
-async function insertDocument(recipeParts) {
+async function insertDocument(url, recipeParts) {
 	try {
 		// Connect to "main" database and access the "recipe" collection
 		const database = client.db("main");
 		const recipe = database.collection("recipe");
 
-		// // Create document to insert
-		// const doc = {
-		// 	title: "Pan-seared test document",
-		// 	instructions: ["Step 1", "Step 2", "Step 3"]
-		// }
-
 		//Insert document into recipe collection
+		recipeParts.url = url;
 		const result = await recipe.insertOne(recipeParts);
 
 		//Print ID of the inserted document

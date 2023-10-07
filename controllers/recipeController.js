@@ -4,6 +4,7 @@ const {returnCupcakeAndKaleChipsObject} = require('../scrapingFunctions/cupcakeA
 const {returnCookieAndKateObject} = require('../scrapingFunctions/cookieAndKateScraper')
 const {fetchHtml} = require('../scrapingFunctions/fetchHtml')
 const {insertDocument} = require ('../db/insertDocument')
+const {findDocument} = require('../db/findDocument')
 
 
 //
@@ -78,11 +79,14 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 		return urlAddress
 	}
 
-	const html = await fetchHtml(createCookieAndKateURL())
-
-	let recipeObject = returnCookieAndKateObject(await html)
-
-	await insertDocument(recipeObject)
+	if(findDocument(createCookieAndKateURL())) {
+		let recipeObject = findDocument(createCookieAndKateURL())
+	} else {
+		const html = await fetchHtml(createCookieAndKateURL())
+		let recipeObject = returnCookieAndKateObject(await html)
+		await insertDocument(createCookieAndKateURL(), recipeObject)
+	}
+	await insertDocument(createCookieAndKateURL(), recipeObject)
 
 	await res.json({
 		recipeObject: recipeObject

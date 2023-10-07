@@ -79,8 +79,8 @@ function returnCookieAndKateURL(html) {
 
 function returnCookieAndKateObject(html) {
 
+	// url: returnCookieAndKateURL(html),
 	let cookieAndKateObject = {
-		url: returnCookieAndKateURL(html),
 		overview: returnCookieAndKateDetails(html),
 		ingredients: returnCookieAndKateIngredients(html),
 		instructions: returnCookieAndKateInstructions(html),
