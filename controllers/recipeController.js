@@ -4,6 +4,7 @@ const {returnCupcakeAndKaleChipsObject} = require('../scrapingFunctions/cupcakeA
 const {returnCookieAndKateObject} = require('../scrapingFunctions/cookieAndKateScraper')
 const {fetchHtml} = require('../scrapingFunctions/fetchHtml')
 const {insertDocument, findDocument, updateDatabaseIfNotFound } = require ('../db/conn')
+const {find} = require("cheerio/lib/api/traversing");
 
 
 //
@@ -78,23 +79,33 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 		return urlAddress
 	}
 
-
-
-
-	if(findDocument(createCookieAndKateURL())) {
-		let recipeObject = findDocument(createCookieAndKateURL())
-	} else {
-		const html = await fetchHtml(createCookieAndKateURL())
-		let recipeObject = returnCookieAndKateObject(await html)
-		await insertDocument(createCookieAndKateURL(), recipeObject)
+	async function findDocumentOrParseWebsite(url) {
+		if ( await findDocument(url) ) {
+			let recipeObject = await findDocument(createCookieAndKateURL());
+			console.log(`We found the ${recipeObject.overview.title} from the database`);
+			return recipeObject;
+		} else {
+			const html = await fetchHtml(url)
+			let recipeObject = returnCookieAndKateObject(await html)
+			await insertDocument(createCookieAndKateURL(), recipeObject)
+			console.log(`We didn't find the recipe in the database, inserting the ${recipeObject.overview.title} into the database`)
+			return recipeObject;
+		}
 	}
-	await insertDocument(createCookieAndKateURL(), recipeObject)
+
+	// if(findDocument(createCookieAndKateURL())) {
+	// 	let recipeObject = findDocument(createCookieAndKateURL())
+	// } else {
+	// 	const html = await fetchHtml(createCookieAndKateURL())
+	// 	let recipeObject = returnCookieAndKateObject(await html)
+	// 	await insertDocument(createCookieAndKateURL(), recipeObject)
+	// }
+	// await insertDocument(createCookieAndKateURL(), recipeObject)
 
 	await res.json({
-		recipeObject: recipeObject
+		recipeObject: findDocumentOrParseWebsite(createCookieAndKateURL())
 	})
 })
-
 
 exports.cupcakesAndKaleChipsParse = asyncHandler(async(req, res) => {
 	const recipe = req.params.recipe
@@ -112,6 +123,18 @@ exports.cupcakesAndKaleChipsParse = asyncHandler(async(req, res) => {
 	await res.json({
 		recipeObject: recipeObject
 	})
+})
+
+exports.checkCoookieAndKateDatabase = asyncHandler( async (req, res, next ) => {
+	const recipe = req.params['url'];
+
+	const recipeURL = `https://cookieandkate.com/${recipe}/`
+
+	await findDocument(recipeURL)
+
+	// await res.json({
+	// 	recipeObject:instructions
+	// })
 })
 
 exports.local_html_parse = asyncHandler(async(req,res, next) => {

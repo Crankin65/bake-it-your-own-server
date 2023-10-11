@@ -19,6 +19,6 @@ router.get('/recipe/cupcakesandkalechips/:recipe/', recipe_controller.cupcakesAn
 // Test parse local page
 router.get('/recipes/parse/test', recipe_controller.local_html_parse)
 
-
+router.get(`/recipes/checkCoookieAndKateDatabase/:url`, recipe_controller.checkCoookieAndKateDatabase)
 
 module.exports = router

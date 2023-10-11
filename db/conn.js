@@ -25,6 +25,7 @@ async function findDocument(url) {
 
 		// print recipe
 		console.log(`This recipe is already in the database ${queriedRecipe._id}`)
+		console.log(queriedRecipe)
 		return queriedRecipe;
 	} finally {
 		await client.close()
