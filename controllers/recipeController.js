@@ -79,7 +79,7 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 		return urlAddress
 	}
 
-	async function findDocumentOrParseWebsite(url) {
+	async function findDocumentOrParseWebsiteCookieAndKate(url) {
 		if ( await findDocument(url) ) {
 			let recipeObject = await findDocument(createCookieAndKateURL());
 			console.log(`We found the ${recipeObject.overview.title} from the database`);
@@ -93,16 +93,7 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 		}
 	}
 
-	const recipeObject = await findDocumentOrParseWebsite(createCookieAndKateURL())
-
-	// if(findDocument(createCookieAndKateURL())) {
-	// 	let recipeObject = findDocument(createCookieAndKateURL())
-	// } else {
-	// 	const html = await fetchHtml(createCookieAndKateURL())
-	// 	let recipeObject = returnCookieAndKateObject(await html)
-	// 	await insertDocument(createCookieAndKateURL(), recipeObject)
-	// }
-	// await insertDocument(createCookieAndKateURL(), recipeObject)
+	const recipeObject = await findDocumentOrParseWebsiteCookieAndKate(createCookieAndKateURL())
 
 	await res.json({
 		recipeObject: recipeObject
@@ -118,9 +109,26 @@ exports.cupcakesAndKaleChipsParse = asyncHandler(async(req, res) => {
 		return urlAddress
 	}
 
-	const html = await fetchHtml(createCupcakesAndKaleChipsURL())
 
-	let recipeObject = returnCupcakeAndKaleChipsObject(await html)
+	async function findDocumentOrParseWebsiteCupcakesAndKaleChips(url) {
+		if ( await findDocument(url) ) {
+			let recipeObject = await findDocument(createCupcakesAndKaleChipsURL());
+			console.log(`We found the ${recipeObject.overview.title} from the database`);
+			return recipeObject;
+		} else {
+			const html = await fetchHtml(url)
+			let recipeObject = returnCupcakeAndKaleChipsObject(await html)
+			await insertDocument(createCupcakesAndKaleChipsURL(), recipeObject)
+			console.log(`We didn't find the recipe in the database, inserting the ${recipeObject.overview.title} into the database`)
+			return recipeObject;
+		}
+	}
+
+	const recipeObject = await findDocumentOrParseWebsiteCupcakesAndKaleChips(createCupcakesAndKaleChipsURL())
+
+
+	// const html = await fetchHtml(createCupcakesAndKaleChipsURL())
+	// let recipeObject = returnCupcakeAndKaleChipsObject(await html)
 
 	await res.json({
 		recipeObject: recipeObject
