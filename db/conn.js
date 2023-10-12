@@ -12,23 +12,17 @@ async function findDocument(url) {
 		const database = client.db("main");
 		const recipes = database.collection("recipe");
 
-		// Query for an entry with the url equals url
-		const query = { url:url}
-
-		// Include id,  overview and ingredients
-		const options = {
-			projection: { _id: 1, overview: 1, ingredients: 1}
-		};
-
 		// Executive query
-		const queriedRecipe = await recipes.findOne(query, options);
+		const queriedRecipe = await recipes.findOne({ url: url});
 
-		// print recipe
-		console.log(`This recipe is already in the database ${queriedRecipe._id}`)
-		console.log(queriedRecipe)
-		return queriedRecipe;
+		if (queriedRecipe) {
+			return await queriedRecipe;
+		} else {
+			return null
+		}
+
 	} finally {
-		await client.close()
+		// await client.close()
 	}
 }
 

@@ -21,9 +21,14 @@ async function findDocument(url) {
 		// Executive query
 		const queriedRecipe = await recipes.findOne(query, options);
 
-		// print recipe
-		console.log(`This recipe is already in the database ${queriedRecipe._id}`)
-		return queriedRecipe;
+		if (await queriedRecipe) {
+			// print recipe
+			console.log(`This recipe is already in the database ${queriedRecipe._id}`)
+			return queriedRecipe;
+		} else {
+			console.log('The recipe is not in the database');
+		}
+
 	} finally {
 		await client.close()
 	}

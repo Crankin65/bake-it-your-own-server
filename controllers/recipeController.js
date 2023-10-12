@@ -4,7 +4,7 @@ const {returnCupcakeAndKaleChipsObject} = require('../scrapingFunctions/cupcakeA
 const {returnCookieAndKateObject} = require('../scrapingFunctions/cookieAndKateScraper')
 const {fetchHtml} = require('../scrapingFunctions/fetchHtml')
 const {insertDocument, findDocument, updateDatabaseIfNotFound } = require ('../db/conn')
-const {find} = require("cheerio/lib/api/traversing");
+// const {find} = require("cheerio/lib/api/traversing");
 
 
 //
@@ -93,6 +93,8 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 		}
 	}
 
+	const recipeObject = await findDocumentOrParseWebsite(createCookieAndKateURL())
+
 	// if(findDocument(createCookieAndKateURL())) {
 	// 	let recipeObject = findDocument(createCookieAndKateURL())
 	// } else {
@@ -103,7 +105,7 @@ exports.cookieandkateParse = asyncHandler( async (req, res, next) => {
 	// await insertDocument(createCookieAndKateURL(), recipeObject)
 
 	await res.json({
-		recipeObject: findDocumentOrParseWebsite(createCookieAndKateURL())
+		recipeObject: recipeObject
 	})
 })
 
@@ -125,10 +127,11 @@ exports.cupcakesAndKaleChipsParse = asyncHandler(async(req, res) => {
 	})
 })
 
-exports.checkCoookieAndKateDatabase = asyncHandler( async (req, res, next ) => {
+exports.checkCookieAndKateDatabase = asyncHandler( async (req, res, next ) => {
 	const recipe = req.params['url'];
+	console.log(`the recipe is ${recipe}`);
 
-	const recipeURL = `https://cookieandkate.com/${recipe}/`
+	const recipeURL = `https://cookieandkate.com/${recipe}`
 
 	await findDocument(recipeURL)
 
