@@ -9,26 +9,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
 
-// connectDB();
-
-const mongoose = require("mongoose")
-// mongoose.set("strictQuery", false);
-const mongoDB = process.env.MONGO_URI
-
-
- // // Attempt from Freecode camp
-// mongoose.connect(mongoDB)
-// const database = mongoose.connection
-//
-// database.on('error', (error) => {
-//   console.log(error)
-// })
-//
-// database.once('connected', () => {
-//   console.log('Database Connected');
-// })
-
-// end FCC
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
