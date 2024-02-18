@@ -8,12 +8,15 @@ const url = process.env.MONGO_URI;
 const client = new MongoClient(url)
 
 async function findDocument(url) {
+	console.log('started to find document')
 	try{
 		const database = client.db("main");
 		const recipes = database.collection("recipe");
 
+
 		// Executive query
 		const queriedRecipe = await recipes.findOne({ url: url});
+		await console.log(queriedRecipe)
 
 		if (queriedRecipe) {
 			return await queriedRecipe;
