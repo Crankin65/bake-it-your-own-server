@@ -10,6 +10,7 @@ const client = new MongoClient(url)
 async function findDocument(url) {
 	console.log('started to find document')
 	try{
+		await client.connect()
 		const database = client.db("main");
 		const recipes = database.collection("recipe");
 
@@ -32,6 +33,7 @@ async function findDocument(url) {
 async function insertDocument(url, recipeParts) {
 	try {
 		// Connect to "main" database and access the "recipe" collection
+		await client.connect()
 		const database = client.db("main");
 		const recipe = database.collection("recipe");
 
